@@ -7,7 +7,9 @@ const app = express();
 const URLs = process.env.URLS.split(',');
 
 const CronExpression = {
-  EVERY_14_MINUTES: '* */10 * * * *',
+  EVERY_14_MINUTES: '*/14 * * * *',
+  EVERY_10_MINUTES: '*/10 * * * *',
+  EVERY_5_SEC: '*/5 * * * * *'
 };
 
 app.get('/keep-alive', (req, res) => {
@@ -18,7 +20,7 @@ app.listen(process.env.PORT, () => {
   console.log(`Server is running on port ${process.env.PORT}`);
 });
 
-cron.schedule(CronExpression.EVERY_14_MINUTES, async () => {
+cron.schedule(CronExpression.EVERY_10_MINUTES, async () => {
   await Promise.all(URLs.map((url) => getHealth(url)));
 });
 
