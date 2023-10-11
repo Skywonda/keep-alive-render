@@ -1,12 +1,22 @@
 require('dotenv').config();
 const cron = require('node-cron');
 const axios = require('axios');
+const express = require('express');
+const app = express();
 
 const URLs = process.env.URLS.split(',');
 
 const CronExpression = {
-  EVERY_14_MINUTES: '0 */14 * * * *',
+  EVERY_14_MINUTES: '* */10 * * * *',
 };
+
+app.get('/keep-alive', (req, res) => {
+  res.status(200).send('Server is active.');
+});
+
+app.listen(process.env.PORT, () => {
+  console.log(`Server is running on port ${process.env.PORT}`);
+});
 
 cron.schedule(CronExpression.EVERY_14_MINUTES, async () => {
   await Promise.all(URLs.map((url) => getHealth(url)));
